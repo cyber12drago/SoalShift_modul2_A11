@@ -52,12 +52,10 @@ while(1) {
     if(stat(nama_file1,&makan)==0){
        startt  = time(&startt);
        endt   = makan.st_atime;
-       char temukan[100];
        //printf("%ld"  "%ld"   "%f",startt,endt,difftime(startt,endt));
        if(difftime(startt,endt)<=30){
          cek++;
-         sprintf(temukan, "%d.txt",cek);
-         strcat(nama_file2,temukan);
+         sprintf(nama_file2, "%s%d.txt",nama_file2,cek);
          nama_file=fopen(nama_file2,"w");
          fclose(nama_file);
        }
