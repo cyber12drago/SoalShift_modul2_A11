@@ -174,7 +174,7 @@ while(1) {
     time_t startt,endt;
 
     if(stat(nama_file1,&makan)==0){
-       startt  = time(&startt);
+       startt  = time(NULL);
        endt   = makan.st_atime;
        //printf("%ld"  "%ld"   "%f",startt,endt,difftime(startt,endt));
        if(difftime(startt,endt)<=30){
