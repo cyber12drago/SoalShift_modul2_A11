@@ -50,11 +50,7 @@ int main() {
         i = atoi(mode);
         chmod(nama_file,i);
 
-        struct passwd *pw = getpwuid(sta.st_uid);
-        struct group *gr = getgrgid(sta.st_gid);
-
-        if(((strcmp(pw->pw_name,cek))==0) && ((strcmp(gr->gr_name,cek))==0))
-	{
+        if(((strcmp(getpwuid(sta.st_uid)->pw_name,cek))==0) && ((strcmp(getgrgid(sta.st_gid)->gr_name,cek))==0)){
 		remove(nama_file);
         }
     }
