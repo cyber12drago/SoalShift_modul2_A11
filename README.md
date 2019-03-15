@@ -113,6 +113,39 @@ Soal ini menyuruh kita menghapus file elen.ku pada folder hatiku yang memiliki o
 
 Note: untuk mengubah permission menjadi 777 jadikan string 0777
 
+# Soal 3
+
+Diberikan file campur2.zip. Di dalam file tersebut terdapat folder “campur2”. Buatlah program C yang dapat : i) mengekstrak file zip tersebut. ii) menyimpan daftar file dari folder “campur2” yang memiliki ekstensi .txt ke dalam file daftar.txt. Catatan:
+Gunakan fork dan exec. Gunakan minimal 3 proses yang diakhiri dengan exec. Gunakan pipe Pastikan file daftar.txt dapat diakses dari text 
+editor
+
+Langkah-Langkah :
+
+1. buat child 1 dengan fork
+
+2. unzip campur.zip dengan fungsi exec
+
+3. buat child 2 
+
+4. jalankan fungsi touch untuk membuat daftar.txt dengan fungsi exec
+
+5. buat child 3
+
+6. simpan output dari child 3 dengan pipe
+
+7. buatlah fungsi exec untuk menjalankan fungsi ls untuk membuat list file di folder campur2
+
+8. buatlah pipe untuk membaca output yang disimpan dalam pipe sebelumnya
+
+9. buatlah fungsi untuk membuat file sementara untuk membaca output dari pipe
+
+10. buatlah fungsi untuk membuka file daftar.txt untuk kemudian di write
+
+11. buatlah fungsi untuk mendapatkan data dari file sementara tsb yang nanti nya akan diprint di daftar.txt
+
+12. buatlah fungsi print untuk mengeprint data list ke daftar.txt
+
+
 # Soal 4
 
 Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).
