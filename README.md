@@ -235,6 +235,7 @@ Per menit memasukkan log#.log ke dalam folder tersebut
 Buatlah program c untuk menghentikan program di atas.
 NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
 
+## Soal A
 ```
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -290,12 +291,12 @@ int main() {
 	char dest;
 	char minutestr[200];
 	sprintf(minutestr," %d", minute);//mengubah integer ke string
-	char file[100] = "/home/diondevara/log/";
-    	strcat (file, folder);
-	strcat (file, "/log");
-	strcat (file, minutestr);
-	strcat (file, ".log");
-	printf ("%s\n", file);
+	char file[100] = "/home/diondevara/log/";//path tujuan
+    	strcat (file, folder);//menambahkan string dari "folder"
+	strcat (file, "/log");//menambahkan "/log" 
+	strcat (file, minutestr);//menambahkan iterasi menit
+	strcat (file, ".log");//menambahkan".log"
+	printf ("%s\n", file);//print string "file"
     	destination = fopen(file, "a+");//open file 
 	dest = fgetc(slog);//mendapat input dari syslog
 	while(dest!=EOF)//cek apakah end of file atau tidak
@@ -303,13 +304,34 @@ int main() {
 	    fputc(dest, destination);//write input syslog ke file
 	    dest = fgetc(slog);//mendapat input dari syslog
 	}
-	fclose(slog);
-	fclose(destination);
-	sleep(60);
+	fclose(slog);//tutup syslog
+	fclose(destination);//tutup file tujuan
+	sleep(60);//delay selama 1 menit
     }
     
   }
   
   exit(EXIT_SUCCESS);
+}
+```
+## Soal B
+```
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+
+
+int main() 
+{
+    char proses[20] = {"soal5a"};//nama proses yang akan di-kill
+    char *argv[3] = {"killall", proses, NULL};//argumen killall
+    execv("/usr/bin/killall", argv);//eksekusi argumen
 }
 ```
