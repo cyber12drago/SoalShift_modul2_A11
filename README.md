@@ -45,7 +45,6 @@ Catatan : Tidak boleh menggunakan crontab.
 Catatan: Tidak boleh menggunakan crontab
 
 ```bash
-#!/bin/bash
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -153,8 +152,6 @@ Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt d
 
 
 ```bash
-#!/bin/bash
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -228,3 +225,91 @@ while(1) {
 ```
 
 Di soal ini kita mengambil waktu akses dari file dan dari sistem kitaa dan  jika file pernah diakses kurang dari atau sama dengan 30 detik yang lalu dan maka akan membuat file makansehat(int).txt
+
+# Soal 5
+Membuat program c untuk mencatat log setiap menit dari file log pada syslog ke /home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log
+Dengan Keterangan:
+Per 30 menit membuat folder /[dd:MM:yyyy-hh:mm]
+Per menit memasukkan log#.log ke dalam folder tersebut
+‘#’ : increment per menit. Mulai dari 1
+Buatlah program c untuk menghentikan program di atas.
+NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
+
+```
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+#include <time.h>
+
+int main() {
+  pid_t pid, sid;
+
+  pid = fork();
+
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+
+  umask(0);
+
+  sid = setsid();
+
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if ((chdir("/home/diondevara/log/")) < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while(1) {
+    // main program here
+    time_t times = time(NULL);
+    struct tm tm = *localtime(&times);//mencari waktu lokal
+    char folder[200];
+    strftime(folder, sizeof(folder), "%d:%m:Y-%H:%M", &tm);//format waktu
+    mkdir(folder,0777);//buat folder
+    for(int minute=1;minute<=30;minute++)
+    {
+	FILE *slog = fopen("/var/log/syslog", "r");//membuka syslog
+	FILE *destination;
+	char dest;
+	char minutestr[200];
+	sprintf(minutestr," %d", minute);//mengubah integer ke string
+	char file[100] = "/home/diondevara/log/";
+    	strcat (file, folder);
+	strcat (file, "/log");
+	strcat (file, minutestr);
+	strcat (file, ".log");
+	printf ("%s\n", file);
+    	destination = fopen(file, "a+");//open file 
+	dest = fgetc(slog);//mendapat input dari syslog
+	while(dest!=EOF)//cek apakah end of file atau tidak
+	{
+	    fputc(dest, destination);//write input syslog ke file
+	    dest = fgetc(slog);//mendapat input dari syslog
+	}
+	fclose(slog);
+	fclose(destination);
+	sleep(60);
+    }
+    
+  }
+  
+  exit(EXIT_SUCCESS);
+}
+```
