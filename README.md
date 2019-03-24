@@ -236,102 +236,53 @@ Buatlah program c untuk menghentikan program di atas.
 NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
 
 ## Soal A
-```
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-#include <time.h>
-
-int main() {
-  pid_t pid, sid;
-
-  pid = fork();
-
-  if (pid < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  if (pid > 0) {
-    exit(EXIT_SUCCESS);
-  }
-
-  umask(0);
-
-  sid = setsid();
-
-  if (sid < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  if ((chdir("/home/diondevara/log/")) < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  close(STDIN_FILENO);
-  close(STDOUT_FILENO);
-  close(STDERR_FILENO);
-
-  while(1) {
-    // main program here
-    time_t times = time(NULL);
-    struct tm tm = *localtime(&times);//mencari waktu lokal
-    char folder[200];
-    strftime(folder, sizeof(folder), "%d:%m:Y-%H:%M", &tm);//format waktu
-    mkdir(folder,0777);//buat folder
-    for(int minute=1;minute<=30;minute++)
-    {
-	FILE *slog = fopen("/var/log/syslog", "r");//membuka syslog
-	FILE *destination;
-	char dest;
-	char minutestr[200];
-	sprintf(minutestr," %d", minute);//mengubah integer ke string
-	char file[100] = "/home/diondevara/log/";//path tujuan
-    	strcat (file, folder);//menambahkan string dari "folder"
-	strcat (file, "/log");//menambahkan "/log" 
-	strcat (file, minutestr);//menambahkan iterasi menit
-	strcat (file, ".log");//menambahkan".log"
-	printf ("%s\n", file);//print string "file"
-    	destination = fopen(file, "a+");//open file 
-	dest = fgetc(slog);//mendapat input dari syslog
-	while(dest!=EOF)//cek apakah end of file atau tidak
-	{
-	    fputc(dest, destination);//write input syslog ke file
-	    dest = fgetc(slog);//mendapat input dari syslog
-	}
-	fclose(slog);//tutup syslog
-	fclose(destination);//tutup file tujuan
-	sleep(60);//delay selama 1 menit
-    }
-    
-  }
-  
-  exit(EXIT_SUCCESS);
-}
-```
+### Langkah-langkah
+- Mencari waktu lokal
+> time_t times = time(NULL);
+struct tm tm = *localtime(&times);
+- Menentukan format waktu
+> strftime(folder, sizeof(folder), "%d:%m:Y-%H:%M", &tm);
+- Membuat folder
+> mkdir(folder,0777);
+- Membuat iterasi 
+> for(int minute=1;minute<=30;minute++)
+- Membuka syslog
+> FILE *slog = fopen("/var/log/syslog", "r");
+- Mengubah integer ke string
+> sprintf(minutestr," %d", minute);
+- Menentukan path tujuan
+> char file[100] = "/home/diondevara/log/";
+- Menambahkan format waktu dari variabel "folder"
+> strcat (file, folder);
+- Menambahkan string "/log"
+> strcat (file, "/log");//menambahkan "/log" 
+- Menambahkan iterasi menit
+> strcat (file, minutestr);//menambahkan iterasi menit
+- Menambahkan string ".log"
+> strcat (file, ".log");
+- Print string dari variabel file 
+> printf ("%s\n", file);//print string "file"
+- Buka file 
+> destination = fopen(file, "a+");//open file 
+- Mendaoat input dari syslog
+> dest = fgetc(slog);//mendapat input dari syslog
+- Cek apakah End of File atau tidak
+> while(dest!=EOF)
+- Write input dari syslog ke file
+> fputc(dest, destination);
+- Mendapat input dari syslog
+> dest = fgetc(slog);
+- Tutup syslog
+> fclose(slog);//tutup syslog
+- Tutup file tujuan 
+> fclose(destination);=
+- Delay selama 1 menit
+> sleep(60);
 ## Soal B
-```
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-
-
-int main() 
-{
-    char proses[20] = {"soal5a"};//nama proses yang akan di-kill
-    char *argv[3] = {"killall", proses, NULL};//argumen killall
-    execv("/usr/bin/killall", argv);//eksekusi argumen
-}
-```
+### Langkah-langkah
+- Menentukan nama proses yang akan di-kill
+> char proses[20] = {"soal5a"};
+- Argumen untuk melakukan killall
+> char *argv[3] = {"killall", proses, NULL};
+- Eksekusi arguman
+> execv("/usr/bin/killall", argv);
